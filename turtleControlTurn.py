@@ -14,8 +14,6 @@ def get_rotation (msg):
     orientation_q = msg.pose.pose.orientation
     orientation_list = [orientation_q.x, orientation_q.y, orientation_q.z, orientation_q.w]
     (roll, pitch, yaw) = euler_from_quaternion (orientation_list)
-    print (yaw)
-
 rospy.init_node('rotate_robot')
 
 sub = rospy.Subscriber ('/odom', Odometry, get_rotation)
@@ -28,7 +26,9 @@ while not rospy.is_shutdown():
     #print quat
     target_rad = target*math.pi/180
     command.angular.z = kp * (target_rad-yaw)
-    print (command.angular.z)
+    diff = abs(command.angular.z)
+    if (abs(command.angular.z) <= 0.009) :
+    	exit("done")
     pub.publish(command)
     #print("taeget={} current:{}", target,yaw)
     r.sleep()
