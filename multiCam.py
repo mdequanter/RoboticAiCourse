@@ -46,9 +46,16 @@ def rescale_frame(frame, percent=75):
     dim = (width, height)
     return cv2.resize(frame, dim, interpolation =cv2.INTER_AREA)
 
+if vc.isOpened(): # try to get the first frame
+    rval, frame = vc.read()
+else:
+    rval = False
+
+
 while True:
-    frame1 = cv2.imread(cam1)
-    frame2 = cv2.imread(cam2)
+    
+    rval1, frame1 = cam1.read()
+    rval1, frame2 = cam2.read()
     imgStack = stackImages(0.6,([frame1,frame2]))
     key = cv2.waitKey(1)
     if key == 27: # exit on ESC
