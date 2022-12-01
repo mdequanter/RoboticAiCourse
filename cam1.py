@@ -3,7 +3,7 @@ import cv2
 windowName = "cam1"
 
 cv2.namedWindow(windowName)
-vc = cv2.VideoCapture("rtsp://tapoadmin:ailabo123$@192.168.2.84/stream1")
+vc = cv2.VideoCapture("rtsp://tapoadmin:ailabo123$@10.3.25.135/stream1")
 
 
 def rescale_frame(frame, percent=75):

@@ -19,7 +19,7 @@ else:
     rval = False
 
 while rval:
-    frame = rescale_frame(frame,25)
+    frame = rescale_frame(frame,50)
     cv2.imshow(windowName, frame)
     rval, frame = vc.read()
     key = cv2.waitKey(20)
