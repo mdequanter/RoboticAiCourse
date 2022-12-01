@@ -7,7 +7,7 @@ from nav_msgs.msg import Odometry
 import tf
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 import time
-from math import radians, copysign, sqrt, pow, pi
+from math import *
 import PyKDL
 
 
@@ -192,22 +192,17 @@ class RobotControl():
         orientation_list = [orientation_q.x, orientation_q.y, orientation_q.z, orientation_q.w]
         (self.roll, self.pitch, self.yaw)  = euler_from_quaternion (orientation_list)
 
-    def rotate(self, degrees):
-    	print (degrees)
-    	kp=0.5
-    	target_rad = degrees * 3.1415926535/180
-    	self.cmd.angular.z = kp * (target_rad-self.yaw)
-    	print (self.cmd.angular.z)
-    	i=0
-    	while (i <= 1):
-    	    # Publish the velocity
-    	    self.vel_publisher.publish(self.cmd)
-    	    self.summit_vel_publisher.publish(self.cmd)
-    	    i += 0.1
-    	    print (self.yaw)
-    	    self.rate.sleep()
-    	self.stop_robot()
-    	print ("done")
+    def rotate(self, target):
+        kp = 0.5
+        target_rad = target*pi/180
+        
+        while not rospy.is_shutdown():
+            self.cmd.angular.z = kp * (target_rad-self.yaw)
+            diff = abs(self.cmd.angular.z)
+            if (abs(self.cmd.angular.z) <= 0.08) :
+            	return ("done")
+            self.vel_publisher.publish(self.cmd)
+            self.rate.sleep()     
     	
     def quat_to_angle(self, quat):
         rot = PyKDL.Rotation.Quaternion(quat.x, quat.y, quat.z, quat.w)
@@ -226,10 +221,16 @@ if __name__ == '__main__':
     #rospy.init_node('robot_control_node', anonymous=True)
     robotcontrol_object = RobotControl()
     try:
-        #robotcontrol_object.move_straight_time('forward',0.1,1)
-        #robotcontrol_object.turn('clockwise',0.1,1)
-        #robotcontrol_object.turn('counterclockwise',0.1,1)
-        robotcontrol_object.rotate(-60.0)
+        #robotcontrol_object.move_straight_time('forward',0.3,1)
+        robotcontrol_object.rotate(-90)
+        robotcontrol_object.move_straight_time('forward',0.1,1)
+        robotcontrol_object.rotate(0)
+        robotcontrol_object.move_straight_time('forward',0.1,1)
+        robotcontrol_object.rotate(90)
+        robotcontrol_object.move_straight_time('forward',0.1,1)
+        robotcontrol_object.rotate(180)
+        robotcontrol_object.move_straight_time('forward',0.1,1)
+        
 
     except rospy.ROSInterruptException:
         pass
