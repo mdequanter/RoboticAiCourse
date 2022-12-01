@@ -53,7 +53,7 @@ while True:
     
     rval1, frame1 = cam1.read()
     rval1, frame2 = cam2.read()
-    imgStack = stackImages(0.6,([frame1,frame2]))
+    imgStack = stackImages(0.4,([frame1,frame2]))
     cv2.imshow(windowName, imgStack)
     key = cv2.waitKey(1)
     if key == 27: # exit on ESC
