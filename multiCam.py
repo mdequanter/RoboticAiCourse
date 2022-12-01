@@ -3,7 +3,7 @@ import cv2
 windowName = "StackedCams"
 
 cv2.namedWindow(windowName)
-cam1 = cv2.VideoCapture("rtsp://tapoadmin:ailabo123$@10.3.25.135/stream1")
+cam1 = cv2.VideoCapture("rtsp://tapoadmin:ailabo123$@10.3.25.139/stream1")
 cam2 = cv2.VideoCapture("rtsp://tapoadmin:ailabo123$@10.3.25.10/stream1")
 
 
@@ -45,12 +45,6 @@ def rescale_frame(frame, percent=75):
     height = int(frame.shape[0] * percent/ 100)
     dim = (width, height)
     return cv2.resize(frame, dim, interpolation =cv2.INTER_AREA)
-
-
-if vc.isOpened(): # try to get the first frame
-    rval, frame = vc.read()
-else:
-    rval = False
 
 while True:
     frame1 = cv2.imread(cam1)
